@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LandmarkMarker.MainPage"
+             Title="تصميم المعلم">
+
+    <Grid Padding="15" ColumnDefinitions="*" RowDefinitions="*,auto">
+        <!-- GraphicsView لرسم المعلم -->
+        <GraphicsView x:Name="graphicsView"
+                      Grid.Column="0"
+                      Grid.Row="0"
+                      Drawable="{Binding GridDrawable}">
+            <GraphicsView.GestureRecognizers>
+                <!-- TapGestureRecognizer لمعالجة الضغط -->
+                <TapGestureRecognizer Tapped="OnTapped" />
+            </GraphicsView.GestureRecognizers>
+        </GraphicsView>
+        <Border
+            Grid.Column="0"
+            Grid.Row="1" HeightRequest="100"
+            Padding="10">
+            <VerticalStackLayout Spacing="10">
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="X = " VerticalOptions="Center"/>
+                    <Entry x:Name="PointX" MinimumHeightRequest="30" HeightRequest="30"/>
+                    <Label Text="Y = " VerticalOptions="Center"/>
+                    <Entry x:Name="PointY" MinimumHeightRequest="30" HeightRequest="30"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Button Text="clear" Clicked="OnClearClicked" MinimumHeightRequest="30" HeightRequest="30" Padding="0"/>
+                    <Button Text="draw" Clicked="OnDrawClicked" MinimumHeightRequest="30" HeightRequest="30" Padding="0"/>
+                    <Label x:Name="lblNumber" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>            
+        </Border>
+    </Grid>
+
+</ContentPage>
