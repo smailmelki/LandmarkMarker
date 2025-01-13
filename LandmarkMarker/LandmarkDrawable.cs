@@ -7,7 +7,8 @@ public class CoordinateSystemDrawable : IDrawable
 
     // عامل التكبير أو التصغير
     public float ScaleFactor { get; set; } = 1;
-
+    public float stepFactor { get; set; } = 10;
+    
     public void AddPoint(float x, float y)
     {
         _points.Add(new PointF(x, y));
@@ -18,7 +19,7 @@ public class CoordinateSystemDrawable : IDrawable
         float width = dirtyRect.Width;
         float height = dirtyRect.Height;
 
-        float step = 20 * ScaleFactor; // المسافة بين الخطوط مع تطبيق التكبير أو التصغير
+        float step = stepFactor * ScaleFactor; // المسافة بين الخطوط مع تطبيق التكبير أو التصغير
 
         // إعداد الألوان وخطوط الرسم
         canvas.StrokeColor = Colors.Black;
@@ -76,10 +77,10 @@ public class CoordinateSystemDrawable : IDrawable
         FillPolygonArea(canvas, centerX, centerY, step);
 
         // حساب المساحة وعرضها
-        float area = CalculatePolygonArea();
-        canvas.FontColor = Colors.DarkBlue;
-        canvas.FontSize = 14;
-        canvas.DrawString($"Area: {area:F2}", 10, 10, HorizontalAlignment.Left);
+        //float area = CalculatePolygonArea();
+        //canvas.FontColor = Colors.DarkBlue;
+        //canvas.FontSize = 14;
+        //canvas.DrawString($"Area: {area:F2}", 10, 10, HorizontalAlignment.Left);
     }
 
     private void DrawPoints(ICanvas canvas, float centerX, float centerY, float step)
@@ -96,7 +97,7 @@ public class CoordinateSystemDrawable : IDrawable
             canvas.FillCircle(drawX, drawY, 5);
 
             // كتابة الإحداثيات
-            canvas.FontColor = Colors.Black;
+            canvas.FontColor = Application.Current.RequestedTheme == AppTheme.Dark ? Colors.White : Colors.Black;
             canvas.FontSize = 10;
             canvas.DrawString($"({point.X}, {point.Y})", drawX + 5, drawY - 10, HorizontalAlignment.Left);
         }
@@ -124,7 +125,9 @@ public class CoordinateSystemDrawable : IDrawable
         path.Close(); // إغلاق المضلع
 
         // تعبئة المضلع باللون الأخضر
-        canvas.FillColor = Colors.Green;
+        canvas.FillColor = Color.FromHsla(120 / 360.0, 1.0, 0.5, 0.5);
+
+
         canvas.FillPath(path);
     }
 
@@ -145,7 +148,7 @@ public class CoordinateSystemDrawable : IDrawable
         canvas.DrawLine(x2, y2, x4, y4);
     }
 
-    private float CalculatePolygonArea()
+    public float CalculatePolygonArea()
     {
         if (_points.Count < 3)
             return 0; // أقل من ثلاث نقاط لا تشكل مضلعًا

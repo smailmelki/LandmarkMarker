@@ -11,7 +11,8 @@ namespace LandmarkMarker
             InitializeComponent();
 
             _drawable = new CoordinateSystemDrawable();
-            _drawable.ScaleFactor = 0.8f;
+            _drawable.stepFactor = 10;
+            _drawable.ScaleFactor = 2f;
 
             BindingContext = new
             {
@@ -32,7 +33,7 @@ namespace LandmarkMarker
             // تحويل الإحداثيات إلى نظام الرسم (نظام المعلم)
             float centerX = (float)graphicsView.Width / 2;
             float centerY = (float)graphicsView.Height / 2;
-            float step = 20; // المسافة بين الخطوط
+            float step = _drawable.stepFactor * _drawable.ScaleFactor; // المسافة بين الخطوط
 
             // حساب الإحداثيات بالنسبة للمعلم
             float x = (float)(touchX - centerX) / step;
@@ -43,6 +44,7 @@ namespace LandmarkMarker
 
             // تحديث الرسم
             graphicsView.Invalidate();
+            lblArea.Text = _drawable.CalculatePolygonArea().ToString();
         }
 
         private void OnClearClicked(object sender, EventArgs e)
@@ -51,7 +53,7 @@ namespace LandmarkMarker
             graphicsView.Invalidate();
             PointX.Text = string.Empty;
             PointY.Text = string.Empty;
-            lblNumber.Text = "0";
+            lblArea.Text = "0";
         }
 
         private void OnDrawClicked(object sender, EventArgs e)
@@ -62,12 +64,16 @@ namespace LandmarkMarker
                     return;
                 _drawable.AddPoint(x, y);
                 graphicsView.Invalidate();
-                lblNumber.Text = _drawable._points.Count.ToString();
-            }
-            else
-            {
-                
-            }
+                lblArea.Text =_drawable.CalculatePolygonArea().ToString("0.0000");
+            }            
+        }
+
+        private void btnUndo_Clicked(object sender, EventArgs e)
+        {
+            if (_drawable._points.Count() == 0)
+                return;
+            _drawable._points.RemoveAt(_drawable._points.Count()-1);
+            graphicsView.Invalidate();
         }
     }
 }
