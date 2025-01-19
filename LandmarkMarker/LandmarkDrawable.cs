@@ -19,37 +19,50 @@ public class CoordinateSystemDrawable : IDrawable
         float width = dirtyRect.Width;
         float height = dirtyRect.Height;
 
-        float step = stepFactor * ScaleFactor; // المسافة بين الخطوط مع تطبيق التكبير أو التصغير
+        float step = stepFactor * ScaleFactor; // المسافة بين الخطوط
+        float centerX = width / 2;
+        float centerY = height / 2;
 
-        // إعداد الألوان وخطوط الرسم
-        canvas.StrokeColor = Colors.Black;
+        // رسم الشبكة مرة واحدة
+        DrawGrid(canvas, width, height, step);
+
+        // رسم المحاور
+        DrawAxes(canvas, width, height, step);
+
+        // رسم النقاط
+        foreach (var point in _points)
+        {
+            DrawSinglePoint(canvas, point, centerX, centerY, step);
+        }
+
+        // ملء المنطقة بالنقاط (إن وجدت)
+        FillPolygonArea(canvas, centerX, centerY, step);
+    }
+
+    private void DrawGrid(ICanvas canvas, float width, float height, float step)
+    {
+        canvas.StrokeColor = Colors.LightGray;
         canvas.StrokeSize = 1;
 
-        // رسم الشبكة (Grid)
-        canvas.StrokeColor = Colors.LightGray;
-
         // خطوط الشبكة العمودية
-        float a = 0;
         for (float x = 0; x <= width; x += step)
         {
             canvas.DrawLine(x, 0, x, height);
-            a += 1;
         }
 
         // خطوط الشبكة الأفقية
-        float b = 0;
         for (float y = 0; y <= height; y += step)
         {
             canvas.DrawLine(0, y, width, y);
-            b += 1;
         }
-
-        // رسم المحاور
+    }
+    private void DrawAxes(ICanvas canvas, float width, float height, float step)
+    {
         canvas.StrokeColor = Colors.Orange;
         canvas.StrokeSize = 2;
 
-        float centerX = (float)Math.Round(a / 2, 0) * step;
-        float centerY = (float)Math.Round(b / 2, 0) * step;
+        float centerX = width / 2;
+        float centerY = height / 2;
 
         // المحور X
         canvas.DrawLine(0, centerY, width, centerY);
@@ -57,31 +70,11 @@ public class CoordinateSystemDrawable : IDrawable
         // المحور Y
         canvas.DrawLine(centerX, 0, centerX, height);
 
-        // إضافة الأسهم على المحاور
+        // الأسهم
         DrawArrow(canvas, centerX, 200, centerX, 0); // أعلى المحور Y
         DrawArrow(canvas, width - 200, centerY, width, centerY); // يمين المحور X
-
-        // تسمية المحاور
-        canvas.FontColor = Colors.Orange;
-        canvas.FontSize = 12;
-
-        // الحرف X
-        canvas.DrawString("X", width - 20, centerY - 20, HorizontalAlignment.Center);
-        // الحرف Y
-        canvas.DrawString("Y", centerX + 10, 10, HorizontalAlignment.Center);
-
-        // رسم النقاط على المعلم
-        DrawPoints(canvas, centerX, centerY, step);
-
-        // ملء المنطقة بالنقاط
-        FillPolygonArea(canvas, centerX, centerY, step);
-
-        // حساب المساحة وعرضها
-        //float area = CalculatePolygonArea();
-        //canvas.FontColor = Colors.DarkBlue;
-        //canvas.FontSize = 14;
-        //canvas.DrawString($"Area: {area:F2}", 10, 10, HorizontalAlignment.Left);
     }
+
 
     private void DrawPoints(ICanvas canvas, float centerX, float centerY, float step)
     {
@@ -102,6 +95,23 @@ public class CoordinateSystemDrawable : IDrawable
             canvas.DrawString($"({point.X}, {point.Y})", drawX + 5, drawY - 10, HorizontalAlignment.Left);
         }
     }
+
+    public void DrawSinglePoint(ICanvas canvas, PointF point, float centerX, float centerY, float step)
+    {
+        // تحويل النقطة إلى إحداثيات الشاشة
+        float drawX = centerX + point.X * step;
+        float drawY = centerY - point.Y * step;
+
+        // رسم النقطة
+        canvas.FillColor = Colors.Red;
+        canvas.FillCircle(drawX, drawY, 5);
+
+        // كتابة الإحداثيات
+        canvas.FontColor = Colors.Black;
+        canvas.FontSize = 10;
+        canvas.DrawString($"({point.X}, {point.Y})", drawX + 5, drawY - 10, HorizontalAlignment.Left);
+    }
+
 
     private void FillPolygonArea(ICanvas canvas, float centerX, float centerY, float step)
     {
