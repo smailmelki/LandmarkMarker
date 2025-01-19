@@ -80,5 +80,10 @@ namespace LandmarkMarker
             lblArea.Text = _drawable.CalculatePolygonArea().ToString();
 
         }
+
+        private void PointX_Completed(object sender, EventArgs e)
+        {
+            PointY.Focus();
+        }
     }
 }

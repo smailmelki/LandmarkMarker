@@ -32,7 +32,7 @@ Grid.Row="1" Text="اضافة" Clicked="OnDrawClicked" WidthRequest="70" HeightR
            Grid.Row="1"  Spacing="10" HorizontalOptions="Center">
             <Label Text="X = " VerticalOptions="Center"/>
             <Border Padding="0">
-                <Entry x:Name="PointX" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric" Completed="OnDrawClicked"/>
+                <Entry x:Name="PointX" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric" Completed="PointX_Completed"/>
             </Border>
         </HorizontalStackLayout>
         <HorizontalStackLayout
