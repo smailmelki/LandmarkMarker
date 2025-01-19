@@ -113,8 +113,7 @@ public class CoordinateSystemDrawable : IDrawable
         path.Close(); // إغلاق المضلع
 
         // تعبئة المضلع باللون الأخضر
-        //canvas.FillColor = Color.FromHsla(120 / 360.0, 1.0, 0.5, 0.5);
-        canvas.FillColor = Color.FromHsla(0.5, 1.0, 0.5, 0.5);
+        canvas.FillColor = Color.FromHsla(120 / 360.0, 1.0, 0.5, 0.5);
 
         canvas.FillPath(path);
     }
