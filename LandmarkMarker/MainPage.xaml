@@ -32,7 +32,7 @@ Grid.Row="1" Text="اضافة" Clicked="OnDrawClicked" WidthRequest="70" HeightR
            Grid.Row="1"  Spacing="10" HorizontalOptions="Center">
             <Label Text="X = " VerticalOptions="Center"/>
             <Border Padding="0">
-                <Entry x:Name="PointX" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric"/>
+                <Entry x:Name="PointX" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric" Completed="OnDrawClicked"/>
             </Border>
         </HorizontalStackLayout>
         <HorizontalStackLayout
@@ -40,7 +40,7 @@ Grid.Row="1" Text="اضافة" Clicked="OnDrawClicked" WidthRequest="70" HeightR
                Grid.Row="1">
             <Label Text="Y = " VerticalOptions="Center"/>
             <Border Padding="0">
-                <Entry x:Name="PointY" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric"/>
+                <Entry x:Name="PointY" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric" Completed="OnDrawClicked"/>
             </Border>
         </HorizontalStackLayout>
         <ImageButton x:Name="btnUndo" Source="undo_icon.png" Grid.Column="0" Grid.Row="2"
