@@ -11,10 +11,11 @@
           Clicked="OnClearClicked"
           Order="Secondary"/>
     </ContentPage.ToolbarItems>
-    <Grid Padding="15" ColumnDefinitions="*" RowDefinitions="*,auto">
+    <Grid Padding="15" ColumnDefinitions="*,*,*" RowDefinitions="*,40,40" RowSpacing="10">
         <!-- GraphicsView لرسم المعلم -->
         <GraphicsView x:Name="graphicsView"
                       Grid.Column="0"
+                      Grid.ColumnSpan="3"
                       Grid.Row="0"
                       Drawable="{Binding GridDrawable}">
             <GraphicsView.GestureRecognizers>
@@ -22,28 +23,35 @@
                 <TapGestureRecognizer Tapped="OnTapped" />
             </GraphicsView.GestureRecognizers>
         </GraphicsView>
-        <Border
-            Grid.Column="0"
-            Grid.Row="1" 
-            Padding="10">
-            <VerticalStackLayout Spacing="10">
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Label Text="X = " VerticalOptions="Center"/>
-                    <Border Padding="0">
-                        <Entry x:Name="PointX" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric"/>
-                    </Border>
-                        <Label Text="Y = " VerticalOptions="Center"/>
-                    <Border Padding="0">
-                        <Entry x:Name="PointY" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric"/>
-                    </Border>
-                    <Label Text="Area = " VerticalOptions="Center"/>
-                    <Label x:Name="lblArea" VerticalOptions="Center"/>
-                </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Button Text="اضافة" Clicked="OnDrawClicked" WidthRequest="70" HeightRequest="50" Padding="0"/>                    
-                </HorizontalStackLayout>
-            </VerticalStackLayout>            
-        </Border>
+
+        <Button  Grid.Column="0"
+Grid.Row="1" Text="اضافة" Clicked="OnDrawClicked" WidthRequest="70" HeightRequest="50" Padding="0"/>
+
+        <HorizontalStackLayout          
+            Grid.Column="1"
+           Grid.Row="1"  Spacing="10" HorizontalOptions="Center">
+            <Label Text="X = " VerticalOptions="Center"/>
+            <Border Padding="0">
+                <Entry x:Name="PointX" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric"/>
+            </Border>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout
+               Grid.Column="2"
+               Grid.Row="1">
+            <Label Text="Y = " VerticalOptions="Center"/>
+            <Border Padding="0">
+                <Entry x:Name="PointY" MinimumHeightRequest="30" HeightRequest="35" Keyboard="Numeric"/>
+            </Border>
+        </HorizontalStackLayout>
+        <ImageButton x:Name="btnUndo" Source="undo_icon.png" Grid.Column="0" Grid.Row="2"
+                     Clicked="btnUndo_Clicked"/>
+        <HorizontalStackLayout Grid.Column="1" Grid.Row="2">
+            <Label Text="Area = " VerticalOptions="Center" FontSize="18"/>
+            <Label x:Name="lblArea" VerticalOptions="Center" FontSize="18"/>
+        </HorizontalStackLayout>
+        <ImageButton x:Name="btnClear" Source="brush_icon.png" Grid.Column="2" Grid.Row="2"
+                      Clicked="OnClearClicked"/>
+
     </Grid>
 
 </ContentPage>

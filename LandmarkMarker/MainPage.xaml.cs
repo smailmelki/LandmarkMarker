@@ -65,6 +65,8 @@ namespace LandmarkMarker
                 _drawable.AddPoint(x, y);
                 graphicsView.Invalidate();
                 lblArea.Text =_drawable.CalculatePolygonArea().ToString("0.0000");
+                PointX.Text = string.Empty;
+                PointY.Text = string.Empty;
             }            
         }
 
@@ -74,6 +76,8 @@ namespace LandmarkMarker
                 return;
             _drawable._points.RemoveAt(_drawable._points.Count()-1);
             graphicsView.Invalidate();
+            lblArea.Text = _drawable.CalculatePolygonArea().ToString();
+
         }
     }
 }
