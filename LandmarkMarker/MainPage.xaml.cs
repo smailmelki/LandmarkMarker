@@ -13,7 +13,7 @@ namespace LandmarkMarker
 
             // إنشاء كائن الرسم وتحديد عوامل التكبير والتصغير
             _drawable = new CoordinateSystemDrawable();
-            _drawable.stepFactor = 10; // المسافة بين خطوط الشبكة
+            _drawable.stepFactor = 10f; // المسافة بين خطوط الشبكة
             _drawable.ScaleFactor = 2f; // مقياس الرسم الابتدائي
 
             // ربط كائن الرسم بواجهة المستخدم
@@ -23,7 +23,11 @@ namespace LandmarkMarker
             };
         }
 
-        // معالجة حدث النقر على الشاشة
+        /// <summary>
+        /// معالجة حدث النقر على الشاشة
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>               
         private void OnTapped(object sender, TappedEventArgs e)
         {
             if (e.GetPosition(graphicsView) is not Point tapPosition)
@@ -53,6 +57,7 @@ namespace LandmarkMarker
         private void OnClearClicked(object sender, EventArgs e)
         {
             _drawable._points.Clear(); // مسح قائمة النقاط
+            _drawable.ScaleFactor = 2f; // مقياس الرسم الابتدائي
             graphicsView.Invalidate(); // إعادة تحديث واجهة الرسم
             PointX.Text = string.Empty; // إفراغ حقل إدخال X
             PointY.Text = string.Empty; // إفراغ حقل إدخال Y

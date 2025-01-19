@@ -20,14 +20,16 @@ public class CoordinateSystemDrawable : IDrawable
         float height = dirtyRect.Height;
 
         float step = stepFactor * ScaleFactor; // المسافة بين الخطوط
-        float centerX = width / 2;
-        float centerY = height / 2;
+        int a = (int)Math.Round(width / step, 0);
+        int b = (int)Math.Round(height / step, 0);
+        float centerX = (float)Math.Round(a / 2 * step, 0);
+        float centerY = (float)Math.Round(b / 2 * step, 0);
 
         // رسم الشبكة مرة واحدة
         DrawGrid(canvas, width, height, step);
 
         // رسم المحاور
-        DrawAxes(canvas, width, height, step);
+        DrawAxes(canvas, width, height, step,centerX,centerY);
 
         // رسم النقاط
         foreach (var point in _points)
@@ -56,13 +58,11 @@ public class CoordinateSystemDrawable : IDrawable
             canvas.DrawLine(0, y, width, y);
         }
     }
-    private void DrawAxes(ICanvas canvas, float width, float height, float step)
+
+    private void DrawAxes(ICanvas canvas, float width, float height, float step, float centerX, float centerY)
     {
         canvas.StrokeColor = Colors.Orange;
         canvas.StrokeSize = 2;
-
-        float centerX = width / 2;
-        float centerY = height / 2;
 
         // المحور X
         canvas.DrawLine(0, centerY, width, centerY);
@@ -73,27 +73,6 @@ public class CoordinateSystemDrawable : IDrawable
         // الأسهم
         DrawArrow(canvas, centerX, 200, centerX, 0); // أعلى المحور Y
         DrawArrow(canvas, width - 200, centerY, width, centerY); // يمين المحور X
-    }
-
-
-    private void DrawPoints(ICanvas canvas, float centerX, float centerY, float step)
-    {
-        canvas.FillColor = Colors.Red;
-
-        foreach (var point in _points)
-        {
-            // تحويل الإحداثيات إلى نظام الرسم مع تطبيق التكبير أو التصغير
-            float drawX = centerX + point.X * step;
-            float drawY = centerY - point.Y * step;
-
-            // رسم النقطة
-            canvas.FillCircle(drawX, drawY, 5);
-
-            // كتابة الإحداثيات
-            canvas.FontColor = Application.Current.RequestedTheme == AppTheme.Dark ? Colors.White : Colors.Black;
-            canvas.FontSize = 10;
-            canvas.DrawString($"({point.X}, {point.Y})", drawX + 5, drawY - 10, HorizontalAlignment.Left);
-        }
     }
 
     public void DrawSinglePoint(ICanvas canvas, PointF point, float centerX, float centerY, float step)
@@ -107,11 +86,10 @@ public class CoordinateSystemDrawable : IDrawable
         canvas.FillCircle(drawX, drawY, 5);
 
         // كتابة الإحداثيات
-        canvas.FontColor = Colors.Black;
+        canvas.FontColor = Application.Current.RequestedTheme == AppTheme.Dark ? Colors.White : Colors.Black;
         canvas.FontSize = 10;
         canvas.DrawString($"({point.X}, {point.Y})", drawX + 5, drawY - 10, HorizontalAlignment.Left);
     }
-
 
     private void FillPolygonArea(ICanvas canvas, float centerX, float centerY, float step)
     {
@@ -135,8 +113,8 @@ public class CoordinateSystemDrawable : IDrawable
         path.Close(); // إغلاق المضلع
 
         // تعبئة المضلع باللون الأخضر
-        canvas.FillColor = Color.FromHsla(120 / 360.0, 1.0, 0.5, 0.5);
-
+        //canvas.FillColor = Color.FromHsla(120 / 360.0, 1.0, 0.5, 0.5);
+        canvas.FillColor = Color.FromHsla(0.5, 1.0, 0.5, 0.5);
 
         canvas.FillPath(path);
     }
