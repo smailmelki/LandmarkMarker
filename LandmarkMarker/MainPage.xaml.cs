@@ -1,4 +1,7 @@
 ﻿using CoordinateSystemApp;
+#if ANDROID
+using Android.Widget;
+#endif
 
 namespace LandmarkMarker
 {
@@ -101,6 +104,15 @@ namespace LandmarkMarker
             lblArea.Text = _drawable.CalculatePolygonArea().ToString(); // تحديث قيمة المساحة
         }
 
+        private void btnDrawGrid_Clicked(object sender, EventArgs e)
+        {
+            if (_drawable.drawGrid)
+                _drawable.drawGrid = false;
+            else
+                _drawable.drawGrid = true;
+            graphicsView.Invalidate(); // تحديث واجهة الرسم
+        }
+
         // الانتقال إلى إدخال Y بعد الانتهاء من إدخال X
         private void PointX_Completed(object sender, EventArgs e)
         {
@@ -131,6 +143,17 @@ namespace LandmarkMarker
                 // تحديث واجهة الرسم
                 graphicsView.Invalidate();
             }
+        }
+
+        private void OnApoutClicked(object sender, EventArgs e)
+        {
+#if ANDROID
+            Toast.MakeText(Android.App.Application.Context,
+                           "هذا البرنامج تم تصميمه وبرمجته \n من قبل ملكي اسماعيل",
+                           ToastLength.Short).Show();
+#else
+            DisplayAlert("معلومات المطور", "هذا البرنامج تم تصميمه وبرمجته \n من قبل ملكي اسماعيل", "OK",FlowDirection.RightToLeft);
+#endif
         }
     }
 }

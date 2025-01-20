@@ -4,11 +4,11 @@
              x:Class="LandmarkMarker.MainPage"
              Title="برنامج حساب المساحة">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="تراجع"
-          Clicked="btnUndo_Clicked"
+        <ToolbarItem Text="عرض الشبكة"
+          Clicked="btnDrawGrid_Clicked"
           Order="Secondary"/>
-        <ToolbarItem Text="مسح"
-          Clicked="OnClearClicked"
+        <ToolbarItem Text="معلومات"
+          Clicked="OnApoutClicked"
           Order="Secondary"/>
     </ContentPage.ToolbarItems>
     <Grid Padding="15" ColumnDefinitions="*,*,*" RowDefinitions="*,40,40" RowSpacing="10">

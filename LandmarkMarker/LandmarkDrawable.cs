@@ -8,6 +8,7 @@ public class CoordinateSystemDrawable : IDrawable
     // عامل التكبير أو التصغير
     public float ScaleFactor { get; set; } = 1;
     public float stepFactor { get; set; } = 10;
+    public bool drawGrid = true;
     
     public void AddPoint(float x, float y)
     {
@@ -26,7 +27,8 @@ public class CoordinateSystemDrawable : IDrawable
         float centerY = (float)Math.Round(b / 2 * step, 0);
 
         // رسم الشبكة مرة واحدة
-        DrawGrid(canvas, width, height, step);
+        if (drawGrid)
+            DrawGrid(canvas, width, height, step);
 
         // رسم المحاور
         DrawAxes(canvas, width, height, step,centerX,centerY);
