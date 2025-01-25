@@ -1,18 +1,20 @@
-﻿namespace CoordinateSystemApp;
+﻿using LandmarkMarker;
+
+namespace CoordinateSystemApp;
 
 public class CoordinateSystemDrawable : IDrawable
 {
     // قائمة النقاط التي سيتم تعليمها
-    public readonly List<PointF> _points = new List<PointF>();
+    public readonly List<PointWithCoordinates> _points = new List<PointWithCoordinates>();
 
     // عامل التكبير أو التصغير
     public float ScaleFactor { get; set; } = 1;
     public float stepFactor { get; set; } = 10;
     public bool drawGrid = true;
-    
-    public void AddPoint(float x, float y)
+
+    public void AddPoint(PointWithCoordinates point)
     {
-        _points.Add(new PointF(x, y));
+        _points.Add(point);
     }
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
@@ -77,20 +79,26 @@ public class CoordinateSystemDrawable : IDrawable
         DrawArrow(canvas, width - 200, centerY, width, centerY); // يمين المحور X
     }
 
-    public void DrawSinglePoint(ICanvas canvas, PointF point, float centerX, float centerY, float step)
+    public void DrawSinglePoint(ICanvas canvas, PointWithCoordinates point, float centerX, float centerY, float step)
     {
         // تحويل النقطة إلى إحداثيات الشاشة
-        float drawX = centerX + point.X * step;
-        float drawY = centerY - point.Y * step;
+        float drawX = centerX + point.CartesianPoint.X * step;
+        float drawY = centerY - point.CartesianPoint.Y * step;
 
         // رسم النقطة
         canvas.FillColor = Colors.Red;
         canvas.FillCircle(drawX, drawY, 5);
 
         // كتابة الإحداثيات
+        string pointInfo;
+        if (point.Type == CoordinateType.Polar)
+            pointInfo = $"(r={point.Radius:F2}, θ={point.Angle:F2}°)";
+        else
+            pointInfo = $"(x={point.CartesianPoint.X:F2}, y={point.CartesianPoint.Y:F2})";
+
         canvas.FontColor = Application.Current.RequestedTheme == AppTheme.Dark ? Colors.White : Colors.Black;
         canvas.FontSize = 10;
-        canvas.DrawString($"({point.X}, {point.Y})", drawX + 5, drawY - 10, HorizontalAlignment.Left);
+        canvas.DrawString(pointInfo, drawX + 5, drawY - 10, HorizontalAlignment.Left);
     }
 
     private void FillPolygonArea(ICanvas canvas, float centerX, float centerY, float step)
@@ -103,8 +111,8 @@ public class CoordinateSystemDrawable : IDrawable
         // تحويل النقاط إلى إحداثيات الرسم
         for (int i = 0; i < _points.Count; i++)
         {
-            float drawX = centerX + _points[i].X * step;
-            float drawY = centerY - _points[i].Y * step;
+            float drawX = centerX + _points[i].CartesianPoint.X * step;
+            float drawY = centerY - _points[i].CartesianPoint.Y * step;
 
             if (i == 0)
                 path.MoveTo(drawX, drawY); // النقطة الأولى
@@ -148,8 +156,8 @@ public class CoordinateSystemDrawable : IDrawable
         {
             int j = (i + 1) % _points.Count; // النقطة التالية (مع الإغلاق)
 
-            area += _points[i].X * _points[j].Y;
-            area -= _points[j].X * _points[i].Y;
+            area += _points[i].CartesianPoint.X * _points[j].CartesianPoint.Y;
+            area -= _points[j].CartesianPoint.X * _points[i].CartesianPoint.Y;
         }
 
         area = Math.Abs(area) / 2.0f;

@@ -39,17 +39,25 @@ namespace LandmarkMarker
             // الحصول على إحداثيات النقطة التي تم النقر عليها
             var touchX = tapPosition.X;
             var touchY = tapPosition.Y;
-
+            /////////////////////////////////////
+            float width = (float)graphicsView.Width;
+            float height = (float)graphicsView.Height;
+            float step = _drawable.stepFactor * _drawable.ScaleFactor; // المسافة بين الخطوط
+            int a = (int)Math.Round(width / step, 0);
+            int b = (int)Math.Round(height / step, 0);
             // حساب الإحداثيات بالنسبة لنظام الرسم (المعلم)
-            float centerX = (float)graphicsView.Width / 2;
-            float centerY = (float)graphicsView.Height / 2;
-            float step = _drawable.stepFactor * _drawable.ScaleFactor;
-
-            float x = (float)(touchX - centerX) / step; // تحويل الإحداثي الأفقي
-            float y = (float)(centerY - touchY) / step; // تحويل الإحداثي العمودي
+            float centerX = (float)Math.Round(a / 2 * step, 0);
+            float centerY = (float)Math.Round(b / 2 * step, 0);
+            /////////////////////////////////////
+            float x = (float)Math.Round((touchX - centerX) / step, 2); // تحويل الإحداثي الأفقي
+            float y = (float)Math.Round((centerY - touchY) / step, 2); // تحويل الإحداثي العمودي
+            PointWithCoordinates point = new PointWithCoordinates(x, y, CoordinateType.Cartesian);
+            // منع إضافة النقطة إذا كانت مكررة
+            if (_drawable._points.Contains(point))
+                return;
 
             // إضافة النقطة إلى الرسم
-            _drawable.AddPoint((float)Math.Round(x, 2), (float)Math.Round(y, 2));
+            _drawable.AddPoint(point);
 
             // تحديث واجهة الرسم
             graphicsView.Invalidate();
@@ -70,25 +78,65 @@ namespace LandmarkMarker
         // زر إضافة نقطة
         private void OnDrawClicked(object sender, EventArgs e)
         {
-            if (float.TryParse(PointX.Text, out float x) && float.TryParse(PointY.Text, out float y))
+            if (swPolar.IsToggled)
             {
+                PolarDraw();
+            }
+            else
+            {
+                DrawPoint();                
+            }
+        }
+
+        void PolarDraw()
+        {
+            if (float.TryParse(PointX.Text, out float radius) && float.TryParse(PointY.Text, out float theta))
+            {
+                PointWithCoordinates point = new PointWithCoordinates(radius, theta, CoordinateType.Polar);
                 // منع إضافة النقطة إذا كانت مكررة
-                if (_drawable._points.Contains(new PointF(x, y)))
-                    return;
+                if (_drawable._points.Contains(point))
+                return;
 
                 // التأكد من أن النقطة تناسب حدود الرسم
-                EnsurePointFits(x, y);
+                EnsurePointFits(point.CartesianPoint.X, point.CartesianPoint.Y);
 
                 // إضافة النقطة إلى قائمة النقاط
-                _drawable.AddPoint(x, y);
+                _drawable.AddPoint(point);
 
                 // تحديث واجهة الرسم
                 graphicsView.Invalidate();
                 lblArea.Text = _drawable.CalculatePolygonArea().ToString("0.0000");
 
                 // إعادة ضبط الحقول
-                PointY.Text = string.Empty;
+                // إعادة ضبط الحقول
                 PointX.Text = string.Empty;
+                PointY.Text = string.Empty;
+                PointX.Focus();
+            }
+        }
+
+        void DrawPoint()
+        {
+            if (float.TryParse(PointX.Text, out float x) && float.TryParse(PointY.Text, out float y))
+            {
+                // منع إضافة النقطة إذا كانت مكررة
+                PointWithCoordinates point = new PointWithCoordinates(x, y, CoordinateType.Cartesian);
+                if (_drawable._points.Contains(point))
+                return;
+
+                // التأكد من أن النقطة تناسب حدود الرسم
+                EnsurePointFits(point.CartesianPoint.X, point.CartesianPoint.Y);
+
+                // إضافة النقطة إلى قائمة النقاط
+                _drawable.AddPoint(point);
+
+                // تحديث واجهة الرسم
+                graphicsView.Invalidate();
+                lblArea.Text = _drawable.CalculatePolygonArea().ToString("0.0000");
+
+                // إعادة ضبط الحقول
+                PointX.Text = string.Empty;
+                PointY.Text = string.Empty;
                 PointX.Focus();
             }
         }
@@ -119,6 +167,7 @@ namespace LandmarkMarker
             PointY.Focus();
         }
 
+        
         // التأكد من أن النقطة تناسب منطقة الرسم وتعديل المقياس إذا لزم الأمر
         private void EnsurePointFits(float x, float y)
         {
@@ -154,6 +203,20 @@ namespace LandmarkMarker
 #else
             DisplayAlert("معلومات المطور", "هذا البرنامج تم تصميمه وبرمجته \n من قبل ملكي اسماعيل", "OK",FlowDirection.RightToLeft);
 #endif
+        }
+
+        private void swPolar_Toggled(object sender, ToggledEventArgs e)
+        {
+            if (swPolar.IsToggled)
+            {
+                txtX.Text = "R = ";
+                txtY.Text = "θ = ";
+            }
+            else 
+            {
+                txtX.Text = "X = ";
+                txtY.Text = "Y = ";
+            }
         }
     }
 }
