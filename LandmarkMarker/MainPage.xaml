@@ -48,8 +48,8 @@
         <ImageButton Grid.Row="2" Grid.Column="0"
                      x:Name="btnUndo" Source="undo_icon.png"
                      Clicked="btnUndo_Clicked"/>
-        <Border Grid.Row="2" Grid.Column="1">
-            <HorizontalStackLayout Grid.ColumnSpan="2" HorizontalOptions="CenterAndExpand">
+        <Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+            <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
                 <Label Text="Area = " VerticalOptions="Center" FontSize="18"/>
                 <Label x:Name="lblArea" VerticalOptions="Center" FontSize="18" MinimumWidthRequest="100"/>
             </HorizontalStackLayout>
