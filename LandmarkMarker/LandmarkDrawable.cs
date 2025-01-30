@@ -92,7 +92,12 @@ public class CoordinateSystemDrawable : IDrawable
         // كتابة الإحداثيات
         string pointInfo;
         if (point.Type == CoordinateType.Polar)
+        {
             pointInfo = $"(r={point.Radius:F2}, θ={point.Angle:F2}°)";
+            canvas.StrokeColor = Colors.LightCoral;
+            canvas.StrokeSize = 1;
+            canvas.DrawLine(new PointF(centerX, centerY), new PointF(drawX,drawY));
+        }
         else
             pointInfo = $"(x={point.CartesianPoint.X:F2}, y={point.CartesianPoint.Y:F2})";
 
